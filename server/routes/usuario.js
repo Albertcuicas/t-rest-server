@@ -3,8 +3,16 @@ const app = express();
 const Usuario = require('../models/usuario');
 const bcrypt = require('bcrypt');
 const _ = require('underscore');
+const { verifyToken, verifyRole } = require('../middlewares/authenticacion');
 
-app.get('/usuario', function (req, res) {
+app.get('/usuario', verifyToken,(req, res) => {
+	
+/*	return res.json({
+		usuario: req.usuario,
+		nombre: req.usuario.nombre,
+		email: req.usuario.email,
+	});*/
+	
 	let desde = req.query.desde || 0;
 	let limite = req.query.limite || 0;
 	desde = Number(desde);
@@ -19,7 +27,7 @@ app.get('/usuario', function (req, res) {
 				msg: err
 			})
 		}
-		Usuario.count({}, (err, conteo) => {
+		Usuario.countDocuments({}, (err, conteo) => {
 			res.json({
 				ok: true,
 				usuarios,
@@ -29,7 +37,7 @@ app.get('/usuario', function (req, res) {
 	});
 });
 
-app.post('/usuario', function (req, res) {
+app.post('/usuario', [verifyToken],function (req, res) {
 	let body = req.body;
 	
 	let usuario = new Usuario({
@@ -53,7 +61,7 @@ app.post('/usuario', function (req, res) {
 	});
 });
 
-app.put('/usuario/:id', function (req, res) {
+app.put('/usuario/:id', [verifyToken, verifyRole],function (req, res) {
 	let id = req.params.id;
 	let body = _.pick(req.body, ['nombre', 'email', 'img', 'role', 'status']);
 	
@@ -72,7 +80,7 @@ app.put('/usuario/:id', function (req, res) {
 	
 });
 
-app.delete('/usuario/:id', function (req, res) {
+app.delete('/usuario/:id', [verifyToken, verifyRole],function (req, res) {
 	
 	let id = req.params.id;
 	Usuario.findByIdAndUpdate(

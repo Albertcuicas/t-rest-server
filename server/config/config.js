@@ -10,7 +10,7 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
 
 
 
-/*************** Entonrno *************/
+/*************** Mongo *************/
 let urlDB;
 
 if(process.env.NODE_ENV === 'dev'){
@@ -20,3 +20,9 @@ if(process.env.NODE_ENV === 'dev'){
 }
 
 process.env.URLDB = urlDB;
+
+/*************** token *************/
+
+process.env.TOKEN_SEED = process.env.TOKEN_SEED || 'secret-dev';
+	
+process.env.TOKEN_EXPIRATION = 60*60*24*30;
