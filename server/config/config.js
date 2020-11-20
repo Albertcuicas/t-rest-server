@@ -1,5 +1,4 @@
 
-
 /*+++++++++++++++ Port*************/
 process.env.PORT = process.env.PORT || 3000;
 
@@ -24,5 +23,17 @@ process.env.URLDB = urlDB;
 /*************** token *************/
 
 process.env.TOKEN_SEED = process.env.TOKEN_SEED || 'secret-dev';
-	
+
 process.env.TOKEN_EXPIRATION = 60*60*24*30;
+
+/*************** Google client ID *************/
+
+if (!process.env.CLIENT_ID) {
+	try {
+		cnfvars = require('../config/env');
+		process.env.CLIENT_ID = cnfvars['CLIENT_ID'];
+	} catch {
+		cnfvars = require('../config/env.sample');
+	}
+}
+
